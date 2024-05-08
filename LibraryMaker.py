@@ -11,7 +11,7 @@ class Function:
         self.description = description
 
     def __str__(self):
-        return f'{self.return_type} {self.name}({", ".join(self.args)})'
+        return f'{self.return_type} {self.name}({", ".join(self.args)}) : {self.description}'
 
 
 class LibraryMaker:
@@ -62,10 +62,11 @@ class LibraryMaker:
                 break
             if decorators[cpt] == '@param':
                 args.append(self.reg_word(results[cpt]))
-            if decorators[cpt] == '@brief':
+            if decorators[cpt] == '@description':
                 description = results[cpt]
                 for char in ['\n', '\t', ' ', '*']:
                     description = description.replace(char, ' ')
+                description = re.sub(r'\s+', ' ', description)
             if decorators[cpt] == '@return':
                 return_type = self.reg_word(results[cpt])
 
