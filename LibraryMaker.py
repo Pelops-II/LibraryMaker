@@ -1,6 +1,7 @@
 import argparse
 import os
 import re
+import json
 
 
 class Function:
@@ -13,12 +14,22 @@ class Function:
     def __str__(self):
         return f'{self.return_type} {self.name}({", ".join(self.args)}) : {self.description}'
 
+    def json(self):
+        return {
+            'name': self.name,
+            'return': self.return_type,
+            'args': self.args,
+            'description': self.description
+        }
+
 
 class LibraryMaker:
     def __init__(self):
         self.args = self.parse_args()
         self.headers = self.get_headers()
         self.functions = self.parse_headers()
+        self.json = [function.json() for function in self.functions]
+        self.output = self.json_output()
 
     def reg_word(self, content):
         return re.match(r'^\W*([\w-]+)', content).group(1)
@@ -38,6 +49,8 @@ class LibraryMaker:
 
         if args.workdir is None:
             args.workdir = '.'
+        if args.output is None:
+            args.output = './config.json'
 
         return args
 
@@ -53,9 +66,9 @@ class LibraryMaker:
 
     def get_function(self, decorators, results, index):
         name = self.reg_word(results[index])
-        return_type = ''
+        return_type = 'void'
         args = []
-        description = ''
+        description = 'None'
 
         for cpt in range(index + 1, len(decorators)):
             if decorators[cpt] == '@name':
@@ -89,8 +102,18 @@ class LibraryMaker:
 
         return functions
 
+    def json_output(self):
+        if self.json is None:
+            print('No functions found')
+            return
+
+        with open(self.args.output, 'w') as file:
+            file.write(json.dumps(self.json, indent=4))
+        print("%d functions found, %s created" %
+              (len(self.json), self.args.output))
+
 
 if __name__ == '__main__':
     lm = LibraryMaker()
     for function in lm.functions:
-        print(function)
+        print(function.json())

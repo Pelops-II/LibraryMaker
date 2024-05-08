@@ -1,0 +1,24 @@
+[
+    {
+        "name": "Window",
+        "return": "void",
+        "args": [
+            "test"
+        ],
+        "description": "This class is responsible for creating and managing the window, test text supp for the example, we will see if the formattin is correct. "
+    },
+    {
+        "name": "test_window",
+        "return": "void",
+        "args": [],
+        "description": "This function is responsible for testing the window. "
+    },
+    {
+        "name": "test_window2",
+        "return": "int",
+        "args": [
+            "int"
+        ],
+        "description": "This function is responsible for testing the window. "
+    }
+]
